@@ -3,148 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Calender</title>
-    <style>
-        body{
-            font-family: Arial, Helvetica, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
-        }
-
-        #calendar{
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-            width: 320px;
-            max-width: 100%;
-        }
-
-        .header{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-            color: #333;
-        }
-
-        .header button{
-            background: none;
-            border: none;
-            font-size: 1.5em;
-            cursor: pointer;
-            color: #333;
-            transition:  color 0.3s;
-        }
-
-        .header button:hover{
-            color: #fda085;
-        }
-
-        .weekdays, #days{
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .weekdays div, #days div{
-            width: 14.28%;
-            text-align: center;
-            padding: 10px 0;
-        }
-
-        .weekdays div{
-            font-weight: bold;
-            color: #555;
-        }
-
-        #days div{
-            cursor: pointer;
-            border-radius: 50%;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        #days div{
-            cursor: pointer;
-            border-radius: 50%;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        #days div:hover {
-            background: #fda085;
-            color: white;
-        }
-
-        #days .prev-month-day, #days .next-month-day {
-            color: #ccc;
-        }
-
-        #days .current-day {
-            background: #fda085;
-            color: white;
-        }
-
-        /* Activity */
-
-        .activity-modal{
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            display: none;
-            z-index: 10;
-        }
-
-        .activity-modal.active{
-            display: block;
-        }
-
-        .overlay{
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            z-index: 5;
-        }
-
-        .overlay.active{
-            display: block;
-        }
-
-        .activity-list{
-            margin-top: 20px;
-            background-color: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-            width: 320px;
-            max-width: 100%;
-        }
-
-        .activity-list ul{
-            list-style: none;
-            padding: 0;
-        }
-
-        .activity-list li{
-            background: #fda085;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            margin-bottom: 5px;
-        }
-    </style>
+    <title>Simple Calender</title>\
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
 </head>
 <body>
     <div id="calender">
@@ -165,10 +26,20 @@
         <div id="days"></div>
     </div>
 
-    <div id="activities" class="activity-list">
-        <h2>Activities</h2>
-        <ul id="activity-list" ></ul>
+    <div id="side-panel">
+        <div id="activities" class="activity-list">
+            <h2>Activities</h2>
+            <ul id="activity-list" ></ul>
+        </div>
+    
+        <br>
+    
+        <div>
+            <button id="addActivityButton" >Add Activity</button>
+        </div>
     </div>
+
+   
 
     <div class="activity-modal" id="activity-modal">
         <h2>Add Activity</h2>
@@ -176,139 +47,9 @@
         <button id="save-activity" >Save</button>
     </div>
 
+    
+
     <div class="overlay" id="overlay"></div>
 
-    <script>
-        const calender = document.getElementById('calender');
-        const monthYearDisplay = document.getElementById('month-year');
-        const daysContainer = document.getElementById('days');
-        const prevButton = document.getElementById('prev');
-        const nextButton = document.getElementById('next');
-
-
-        const activityModal = document.getElementById('activity-modal');
-        const overlay = document.getElementById('overlay');
-        const activityInput = document.getElementById('activity-input');
-        const saveActivityButton = document.getElementById('save-activity');
-        const activityList = document.getElementById('activity-list');
-
-        
-        let currentDate = new Date();
-        let selectedDate = new Date();
-
-        let activies = []
-
-        function renderCalender(date){
-            daysContainer.innerHTML = '';
-
-            const year = date.getFullYear();
-            const month = date.getMonth();
-            const firstDayOfMonth = new Date(year, month, 1).getDay();
-            const lastDateOfMonth = new Date(year, month + 1, 0).getDate();
-            const lastDateOfPrevMonth = new Date(year, month, 0).getDate();
-
-            monthYearDisplay.textContent = `${date.toLocaleString('default', {month: 'long'})} ${year}`;
-
-            for(let i = firstDayOfMonth; i > 0; i--){
-                const day = document.createElement('div');
-                day.textContent = lastDateOfMonth - i + 1;
-                day.classList.add('prev-month-day');
-                daysContainer.appendChild(day);
-            }
-
-            for(let i = 1; i <= lastDateOfMonth; i++ ){
-                const day = document.createElement('div');
-                day.textContent = i;
-                day.addEventListener('click', () => openActivityModal(year, month, i));
-                if(i === selectedDate.getDate() && 
-                    year === selectedDate.getFullYear() && 
-                    month === selectedDate.getMonth()){
-                        day.classList.add('current-day')
-                }
-                daysContainer.appendChild(day);
-            }
-
-            const remainingDays = 42 - daysContainer.childElementCount;
-
-            for(let i = 1; i <= remainingDays; i++){
-                const day = document.createElement('div');
-                day.textContent = i;
-                day.classList.add('next-month-day');
-                daysContainer.appendChild(day);
-            }
-        }
-
-        
-
-        function openActivityModal(year, month, day){
-            selectedDate = new Date(year, month, day);
-            activityInput.value = '';
-            overlay.classList.add('active');
-            activityModal.classList.add('active');
-            renderActivities(selectedDate)
-        }
-
-        function closeActivityModal(){
-            overlay.classList.remove('active');
-            activityModal.classList.remove('active');
-        }
-
-        function saveActivity(){
-            const activity = activityInput.value.trim();
-
-            if(activity){
-                const dateKey = selectedDate.toISOString().split('T')[0];
-                if(!activies[dateKey]){
-                    activies[dateKey] = [];
-                }
-
-                activies[dateKey].push(activity);
-                closeActivityModal();
-                renderCalender(currentDate);
-                renderActivities(selectedDate)
-            }
-        }
-
-        function renderActivities(date) {
-            const dateKey = date.toISOString().split('T')[0];
-            activityList.innerHTML = '';
-
-            if (activities[dateKey]) {
-                activities[dateKey].forEach(activity => {
-                    const li = document.createElement('li');
-                    li.textContent = activity;
-                    activityList.appendChild(li);
-                });
-            } else {
-                const li = document.createElement('li');
-                li.textContent = 'No activities for this day.';
-                activityList.appendChild(li);
-            }
-        }
-
-        prevButton.addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalender(currentDate);
-        });
-
-        nextButton.addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            renderCalender(currentDate);
-        });
-
-        daysContainer.addEventListener('click', (event) => {
-            if(event.target.tagName = 'DIV' && event.target.textContent){
-                const day = parseInt(event.target.textContent);
-                const year = currentDate.getFullYear();
-                const month = currentDate.getMonth();
-                openActivityModal(year, month, day);
-            }
-        });
-
-        overlay.addEventListener('click', closeActivityModal);
-        saveActivityButton.addEventListener('click', saveActivity);
-
-        renderCalender(currentDate);
-    </script>
 </body>
 </html>

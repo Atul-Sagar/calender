@@ -1,0 +1,139 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+}
+
+#calendar{
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    width: 320px;
+    max-width: 100%;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.header button{
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #333;
+    transition:  color 0.3s;
+}
+
+.header button:hover{
+    color: #fda085;
+}
+
+.weekdays, #days{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.weekdays div, #days div{
+    width: 14.28%;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.weekdays div{
+    font-weight: bold;
+    color: #555;
+}
+
+#days div{
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.3s, color 0.3s;
+}
+
+#days div{
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.3s, color 0.3s;
+}
+
+#days div:hover {
+    background: #fda085;
+    color: white;
+}
+
+#days .prev-month-day, #days .next-month-day {
+    color: #ccc;
+}
+
+#days .current-day {
+    background: #fda085;
+    color: white;
+}
+
+/* Activity */
+
+.activity-modal{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    display: none;
+    z-index: 10;
+}
+
+.activity-modal.active{
+    display: block;
+}
+
+.overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 5;
+}
+
+.overlay.active{
+    display: block;
+}
+
+.activity-list{
+    margin-top: 20px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    width: 320px;
+    max-width: 100%;
+}
+
+.activity-list ul{
+    list-style: none;
+    padding: 0;
+}
+
+.activity-list li{
+    background: #fda085;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
